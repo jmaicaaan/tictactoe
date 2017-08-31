@@ -13,6 +13,9 @@
   .box.box-clicked {
     background-color: green;
   }
+  .box.ai-clicked {
+    background-color: pink;
+  }
   .box:hover{
     cursor: pointer; 
   }

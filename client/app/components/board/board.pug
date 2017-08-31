@@ -6,7 +6,7 @@ div(layout="row")
         span.md-subhead Large
     md-card-content
       .box-container
-        .box(ng-repeat="box in $ctrl.boxes" ng-click="$ctrl.onBoxClick(box);" ng-class="{'box-clicked': box.isClicked}") 
+        .box(ng-repeat="box in $ctrl.boxes" ng-click="$ctrl.onUserClickBox(box);" ng-class="{'box-clicked': box.isClicked, 'ai-clicked': box.isAI}") 
           | {{ $index + 1 }}
     md-card-actions(layout="row", layout-align="end center")
       md-button Action 1

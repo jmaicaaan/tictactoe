@@ -21,14 +21,49 @@ class BoardController {
     }
   };
 
-  onBoxClick = (box) => {
-    if (!box) return;
-    if (this.clickedBoxes.length <= this.totalNumberOfBox && !box.isClicked) {
-      box.isClicked = true;
-      this.clickedBoxes.push(box);
+  onUserClickBox = (userSelectedBox) => {
+    if (!userSelectedBox) return;
+    if (this.isSelectedBoxAvailable(userSelectedBox)) {
+      this.addSeletedBox(userSelectedBox);
+      debugger;
+      if (this.hasAvailableBox()) {
+        this.aiGetSelectedBox();  
+      }
     } else {
       alert('Box cannot be clicked');
     }
+  };
+
+  aiGetSelectedBox = () => {
+    let hasSelected = true;
+    let aiSelectedBox;
+    while (hasSelected) {
+      let randomNumber = Math.floor(Math.random() * 10);
+      let availableBoxes = this.boxes.filter((box) => {
+        return !box.isClicked;
+      });
+      aiSelectedBox = availableBoxes.find((box) => {
+        return box.boxNo === randomNumber;
+      });
+      if (aiSelectedBox) {
+        aiSelectedBox.isAI = true;
+        hasSelected = false;
+      }
+    }
+    this.addSeletedBox(aiSelectedBox);
+  };
+
+  isSelectedBoxAvailable = (box) => {
+    return this.hasAvailableBox() && !box.isClicked;
+  };
+  
+  addSeletedBox = (box) => {
+    box.isClicked = true;
+    this.clickedBoxes.push(box);
+  };
+
+  hasAvailableBox = () => {
+    return this.clickedBoxes.length < this.totalNumberOfBox;
   };
 }
 
