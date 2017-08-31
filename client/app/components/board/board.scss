@@ -10,4 +10,10 @@
     width: 50px;
     height: 50px;
   }
+  .box.box-clicked {
+    background-color: green;
+  }
+  .box:hover{
+    cursor: pointer; 
+  }
 }
