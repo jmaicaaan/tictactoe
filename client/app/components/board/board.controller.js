@@ -1,7 +1,8 @@
 class BoardController {
-  constructor($state, $stateParams) {
+  constructor($state, $stateParams, $timeout) {
     "ngInject";
     this.name = 'board';
+    this.$timeout = $timeout;
     this.boxes = [];
     this.clickedBoxes = [];
     this.totalNumberOfBox = 9;
@@ -25,9 +26,13 @@ class BoardController {
     if (!userSelectedBox) return;
     if (this.isSelectedBoxAvailable(userSelectedBox)) {
       this.addSeletedBox(userSelectedBox);
-      debugger;
       if (this.hasAvailableBox()) {
         this.aiGetSelectedBox();  
+      } else {
+        alert('Game is over. Will restart in a few seconds...');
+        this.$timeout(() => {
+          this.resetBoxes();
+        }, 300);
       }
     } else {
       alert('Box cannot be clicked');
@@ -64,6 +69,17 @@ class BoardController {
 
   hasAvailableBox = () => {
     return this.clickedBoxes.length < this.totalNumberOfBox;
+  };
+
+  resetBoxes = () => {
+    this.clickedBoxes = [];
+    this.boxes = this.boxes.map((box) => {
+      if (box.hasOwnProperty('isAI')) {
+        delete box.isAI;
+      }
+      box.isClicked = false;
+      return box;
+    });
   };
 }
 
