@@ -34,6 +34,7 @@ class BoardController {
           this.resetBoxes();
         }, 300);
       }
+      this.checkWinner();
     } else {
       alert('Box cannot be clicked');
     }
@@ -80,6 +81,41 @@ class BoardController {
       box.isClicked = false;
       return box;
     });
+  };
+
+  getSelectedBoxes = (filter) => {
+    return this.boxes.filter((box) => {
+      return box.isClicked;
+    });
+  };
+
+  checkWinner = () => {
+    let selectedBoxes = this.getSelectedBoxes();
+    let userSelectedBoxes = selectedBoxes.filter((box) => {
+      return !box.isAI;
+    });
+    let aiSelectedBoxes = selectedBoxes.filter((box) => {
+      return box.isAI;
+    });
+    if (userSelectedBoxes.length >= 3) {
+      // todo checking
+      return;
+    }
+    if (aiSelectedBoxes.length >= 3) {
+      // todo checking
+      return;
+    }
+  };
+
+  checkForHorizontal = (boxes) => {
+  };
+
+  checkForVertical = (boxes) => {
+
+  };
+
+  checkForDiagonal = (boxes) => {
+
   };
 }
 
