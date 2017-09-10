@@ -19,6 +19,7 @@ class BoardController {
         boxNo: i,
         isClicked: false
       });
+      }
     }
   };
 
@@ -99,15 +100,48 @@ class BoardController {
     });
     if (userSelectedBoxes.length >= 3) {
       // todo checking
-      return;
+      if (this.checkForHorizontal(userSelectedBoxes)) {
+        this.resetBoxes();
+        alert('You win!');
+        return;
+      };
     }
     if (aiSelectedBoxes.length >= 3) {
       // todo checking
-      return;
+      if (this.checkForHorizontal(aiSelectedBoxes)) {
+        this.resetBoxes();
+        alert('AI wins!');
+        return;
+      };
     }
   };
 
   checkForHorizontal = (boxes) => {
+    let patterns = [[1,2,3], [4,5,6], [7,8,9]];
+    let boxNos = boxes.map((box) => {
+      return box.boxNo;
+    });
+    let temp = [];
+    let hasHorizontalPattern = false;
+    for (let i = 0; i <= patterns.length - 1; i++) {
+      for (let j = 0; j <= patterns[i].length - 1; j++) {
+        let key = patterns[i][j];
+        if (boxNos.indexOf(key) > -1) {
+          temp.push(key);
+        } 
+      }
+      if (temp.length === 3) {
+        hasHorizontalPattern = true;
+        break;
+      } else {
+        temp = [];
+        continue;
+      }
+    }
+    if (hasHorizontalPattern) {
+      return true;
+    }
+    return false;
   };
 
   checkForVertical = (boxes) => {
