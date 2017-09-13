@@ -19,7 +19,6 @@ class BoardController {
         boxNo: i,
         isClicked: false
       });
-      }
     }
   };
 
@@ -28,7 +27,7 @@ class BoardController {
     if (this.isSelectedBoxAvailable(userSelectedBox)) {
       this.addSeletedBox(userSelectedBox);
       if (this.hasAvailableBox()) {
-        this.aiGetSelectedBox();  
+        this.aiGetSelectedBox();
       } else {
         alert('Game is over. Will restart in a few seconds...');
         this.$timeout(() => {
@@ -63,7 +62,7 @@ class BoardController {
   isSelectedBoxAvailable = (box) => {
     return this.hasAvailableBox() && !box.isClicked;
   };
-  
+
   addSeletedBox = (box) => {
     box.isClicked = true;
     this.clickedBoxes.push(box);
@@ -99,57 +98,71 @@ class BoardController {
       return box.isAI;
     });
     if (userSelectedBoxes.length >= 3) {
-      // todo checking
-      if (this.checkForHorizontal(userSelectedBoxes)) {
-        this.resetBoxes();
+      if (this.checkForHorizontal(userSelectedBoxes) || this.checkForVertical(userSelectedBoxes)
+        || this.checkForDiagonal(userSelectedBoxes)) {
         alert('You win!');
+        this.resetBoxes();
         return;
       };
     }
     if (aiSelectedBoxes.length >= 3) {
-      // todo checking
-      if (this.checkForHorizontal(aiSelectedBoxes)) {
-        this.resetBoxes();
+      if (this.checkForHorizontal(aiSelectedBoxes) || this.checkForVertical(aiSelectedBoxes)
+        || this.checkForDiagonal(aiSelectedBoxes)) {       
         alert('AI wins!');
+        this.resetBoxes();
         return;
       };
     }
   };
 
   checkForHorizontal = (boxes) => {
-    let patterns = [[1,2,3], [4,5,6], [7,8,9]];
-    let boxNos = boxes.map((box) => {
-      return box.boxNo;
-    });
-    let temp = [];
-    let hasHorizontalPattern = false;
-    for (let i = 0; i <= patterns.length - 1; i++) {
-      for (let j = 0; j <= patterns[i].length - 1; j++) {
-        let key = patterns[i][j];
-        if (boxNos.indexOf(key) > -1) {
-          temp.push(key);
-        } 
-      }
-      if (temp.length === 3) {
-        hasHorizontalPattern = true;
-        break;
-      } else {
-        temp = [];
-        continue;
-      }
-    }
-    if (hasHorizontalPattern) {
-      return true;
-    }
-    return false;
+    let patterns = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+    return this.checkForWinner(patterns, boxes);
   };
 
   checkForVertical = (boxes) => {
-
+    let patterns = [[1,4,7], [2,5,8], [3,6,9]];
+    return this.checkForWinner(patterns, boxes);
   };
 
   checkForDiagonal = (boxes) => {
+    let patterns = [[1,5,9], [3,5,7]];
+    return this.checkForWinner(patterns, boxes);
+  };
 
+  checkForWinner = (patterns, boxes) => {
+    if (!patterns || patterns.length <= 0) return;
+    
+    let boxCombination = [];
+    let hasWinner = false;
+    let boxNos = boxes.map((box) => {
+      return box.boxNo;
+    });
+    // let patterns = [
+    //   {
+    //     horizontal: [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    //   },
+    //   {
+
+    //   },
+    //   {
+
+    //   }
+    // ]
+
+    patterns.forEach((pattern) => {
+      if (!hasWinner) {
+        boxCombination = boxNos.filter((value, key, array) => {
+          if (pattern.indexOf(value) > -1) {
+            return value;
+          }
+        });
+      }
+      if (boxCombination.length === 3) {
+        hasWinner = true;
+      }
+    });
+    return hasWinner;
   };
 }
 
