@@ -3,7 +3,6 @@ div(layout="row")
     md-card-title
       md-card-title-text
         span.md-headline Tic tac toe
-        span.md-subhead Large
     md-card-content
       .box-container
         .box(ng-repeat="box in $ctrl.boxes" ng-click="$ctrl.onUserClickBox(box);" ng-class="{'box-clicked': box.isClicked, 'ai-clicked': box.isAI}") 

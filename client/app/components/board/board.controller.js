@@ -110,9 +110,9 @@ class BoardController {
       };
     }
     if (aiSelectedBoxes.length >= 3) {
-      if (this.checkForWinner(aiSelectedBoxes)) {       
-        this.resetBoxes();
+      if (this.checkForWinner(aiSelectedBoxes)) {
         alert('AI wins!');
+        this.resetBoxes();
         return;
       };
     }

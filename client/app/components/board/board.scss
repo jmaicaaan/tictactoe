@@ -9,20 +9,9 @@
     border: 1px solid black;
     width: 50px;
     height: 50px;
-    // display: grid;
-  }
-  .box.box-clicked:before {
-    // content: "X";
-    // align-content: center;
-    // grid-column: 2;
-    // grid-row: 2;
-    // font-size: 25px;
   }
   .box.box-clicked {
     background-color: green;
-  }
-  .box.ai-clicked:before {
-    // content: "O";
   }
   .box.ai-clicked {
     background-color: pink;
