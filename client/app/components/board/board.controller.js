@@ -6,6 +6,10 @@ class BoardController {
     this.boxes = [];
     this.clickedBoxes = [];
     this.totalNumberOfBox = 9;
+    this.tokens = {
+      user: '',
+      ai: ''
+    };
     this.init();
   }
 
@@ -15,6 +19,7 @@ class BoardController {
   };
 
   initializeBox = () => {
+    if (this.boxes.length === this.totalNumberOfBox) return;
     for (let i = 1; i <= this.totalNumberOfBox; i++) {
       this.boxes.push({
         boxNo: i,
@@ -79,7 +84,8 @@ class BoardController {
         box.isClicked = false;
         return box;
       });
-    }, 300)
+      this.init();
+    }, 300);
   };
 
   getSelectedBoxes = (filter) => {
@@ -143,7 +149,22 @@ class BoardController {
   askForSelectedToken = () => {
     let _confirm = confirm('Do you want to play as player X?');
     if (!_confirm) {
+      this.tokens.ai = 'X';
+      this.tokens.user = 'O';
       this.aiGetSelectedBox();
+    } else {
+      this.tokens.ai = 'O';
+      this.tokens.user = 'X';
+    }
+  };
+
+  displayToken = (box) => {
+    if (box.isClicked) {
+      if (box.isAI) {
+        return this.tokens.ai;
+      } else {
+        return this.tokens.user;
+      }
     }
   };
 }
