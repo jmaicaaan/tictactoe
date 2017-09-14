@@ -1,5 +1,5 @@
 {
-  "name": "calculator",
+  "name": "tictactoe",
   "version": "0.0.1",
   "description": "In completion of FreeCodeCamp front end certificate - A tic tac toe game written in javascript ",
   "main": "index.js",
