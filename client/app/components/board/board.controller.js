@@ -11,6 +11,7 @@ class BoardController {
 
   init = () => {
     this.initializeBox();
+    this.askForSelectedToken();
   };
 
   initializeBox = () => {
@@ -29,21 +30,16 @@ class BoardController {
       if (this.hasAvailableBox()) {
         this.aiGetSelectedBox();
       } else {
-        alert('Game is over. Will restart in a few seconds...');
-        this.$timeout(() => {
-          this.resetBoxes();
-        }, 300);
+        this.resetBoxes();
       }
       this.checkWinner();
-    } else {
-      alert('Box cannot be clicked');
     }
   };
 
   aiGetSelectedBox = () => {
-    let hasSelected = true;
+    let hasNotSelected = true;
     let aiSelectedBox;
-    while (hasSelected) {
+    while (hasNotSelected) {
       let randomNumber = Math.floor(Math.random() * 10);
       let availableBoxes = this.boxes.filter((box) => {
         return !box.isClicked;
@@ -53,7 +49,7 @@ class BoardController {
       });
       if (aiSelectedBox) {
         aiSelectedBox.isAI = true;
-        hasSelected = false;
+        hasNotSelected = false;
       }
     }
     this.addSeletedBox(aiSelectedBox);
@@ -73,14 +69,17 @@ class BoardController {
   };
 
   resetBoxes = () => {
-    this.clickedBoxes = [];
-    this.boxes = this.boxes.map((box) => {
-      if (box.hasOwnProperty('isAI')) {
-        delete box.isAI;
-      }
-      box.isClicked = false;
-      return box;
-    });
+    alert('Game is over. Will restart in a few seconds...');
+    this.$timeout(() => {
+      this.clickedBoxes = [];
+      this.boxes = this.boxes.map((box) => {
+        if (box.hasOwnProperty('isAI')) {
+          delete box.isAI;
+        }
+        box.isClicked = false;
+        return box;
+      });
+    }, 300)
   };
 
   getSelectedBoxes = (filter) => {
@@ -98,71 +97,54 @@ class BoardController {
       return box.isAI;
     });
     if (userSelectedBoxes.length >= 3) {
-      if (this.checkForHorizontal(userSelectedBoxes) || this.checkForVertical(userSelectedBoxes)
-        || this.checkForDiagonal(userSelectedBoxes)) {
+      if (this.checkForWinner(userSelectedBoxes)) {
         alert('You win!');
         this.resetBoxes();
         return;
       };
     }
     if (aiSelectedBoxes.length >= 3) {
-      if (this.checkForHorizontal(aiSelectedBoxes) || this.checkForVertical(aiSelectedBoxes)
-        || this.checkForDiagonal(aiSelectedBoxes)) {       
-        alert('AI wins!');
+      if (this.checkForWinner(aiSelectedBoxes)) {       
         this.resetBoxes();
+        alert('AI wins!');
         return;
       };
     }
   };
 
-  checkForHorizontal = (boxes) => {
-    let patterns = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
-    return this.checkForWinner(patterns, boxes);
-  };
-
-  checkForVertical = (boxes) => {
-    let patterns = [[1,4,7], [2,5,8], [3,6,9]];
-    return this.checkForWinner(patterns, boxes);
-  };
-
-  checkForDiagonal = (boxes) => {
-    let patterns = [[1,5,9], [3,5,7]];
-    return this.checkForWinner(patterns, boxes);
-  };
-
-  checkForWinner = (patterns, boxes) => {
-    if (!patterns || patterns.length <= 0) return;
-    
+  checkForWinner = (boxes) => {
     let boxCombination = [];
     let hasWinner = false;
     let boxNos = boxes.map((box) => {
       return box.boxNo;
     });
-    // let patterns = [
-    //   {
-    //     horizontal: [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-    //   },
-    //   {
-
-    //   },
-    //   {
-
-    //   }
-    // ]
-
-    patterns.forEach((pattern) => {
-      if (!hasWinner) {
-        boxCombination = boxNos.filter((value, key, array) => {
-          if (pattern.indexOf(value) > -1) {
-            return value;
-          }
-        });
-      }
-      if (boxCombination.length === 3) {
-        hasWinner = true;
-      }
+    let combinations = [
+      [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+      [[1, 4, 7], [2, 5, 8], [3, 6, 9]],
+      [[1, 5, 9], [3, 5, 7]]
+    ];
+    combinations.forEach((patterns) => {
+      patterns.forEach((pattern) => {
+        if (!hasWinner) {
+          boxCombination = boxNos.filter((value, key, array) => {
+            if (pattern.indexOf(value) > -1) {
+              return value;
+            }
+          });
+        }
+        if (boxCombination.length === 3) {
+          hasWinner = true;
+        }
+      });
     });
     return hasWinner;
+  };
+
+  askForSelectedToken = () => {
+    let _confirm = confirm('Do you want to play as player X?');
+    if (!_confirm) {
+      this.aiGetSelectedBox();
+    }
   };
 }
 
